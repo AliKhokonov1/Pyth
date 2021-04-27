@@ -1,8 +1,7 @@
 import sys
-from PIL import Image
+from PIL import Image, ImageDraw
 def main(N1,N2,N,infile,outfile):
     try:
-        #Загружаем изображение с жесткого диска
         myim = Image.open(infile)
     except FileNotFoundError:
         print("Файл не найден")
@@ -15,11 +14,15 @@ def main(N1,N2,N,infile,outfile):
         F=N1
         N1=N2
         N2=F
-    for x in range(myim.shape[0]):
-        for y in range(myim.shape[1]):
-            R, G, B = myim[x, y]
+    draw = ImageDraw.Draw(myim)
+    pix = myim.load()
+    for x in range(myim.size[0]):
+        for y in range(myim.size[1]):
+            R = pix[x,y][0]
+            G = pix[x,y][1]
+            B = pix[x,y][2]
             if N1 <= sum([R,G,B]) <= N2:
-                myim[x,y]=(N,N,N)
+                draw.point((x,y),(N,N,N))
     myim.save(outfile,"bmp")
 
 if __name__ == "__main__":
